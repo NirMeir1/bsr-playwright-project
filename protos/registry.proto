@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package buf.alpha.registry.v1alpha1;
+
+service RegistryService {
+  rpc CreateRepository (CreateRepositoryRequest) returns (CreateRepositoryResponse);
+  rpc GetRepository (GetRepositoryRequest) returns (GetRepositoryResponse);
+  rpc UpdateRepository (UpdateRepositoryRequest) returns (UpdateRepositoryResponse);
+  rpc DeleteRepository (DeleteRepositoryRequest) returns (DeleteRepositoryResponse);
+}
+
+message CreateRepositoryRequest {
+  string name = 1;
+  string visibility = 2;
+}
+
+message CreateRepositoryResponse {
+  string name = 1;
+}
+
+message GetRepositoryRequest {
+  string owner = 1;
+  string name = 2;
+}
+
+message GetRepositoryResponse {
+  string name = 1;
+}
+
+message UpdateRepositoryRequest {
+  string owner = 1;
+  string name = 2;
+  string visibility = 3;
+}
+
+message UpdateRepositoryResponse {
+  string visibility = 1;
+}
+
+message DeleteRepositoryRequest {
+  string owner = 1;
+  string name = 2;
+}
+
+message DeleteRepositoryResponse {}
