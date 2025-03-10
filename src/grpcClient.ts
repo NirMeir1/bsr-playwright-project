@@ -17,10 +17,12 @@ const RegistryService = protoDescriptor.buf.alpha.registry.v1alpha1.RegistryServ
 
 class GRPCClient {
   private static instance: GRPCClient;
-  private client: grpc.Client;
+  private client: grpc.Client 
+  & { CreateRepository: Function, GetRepository: Function, UpdateRepository: Function, DeleteRepository: Function };
 
   private constructor() {
-    this.client = new RegistryService('api.buf.build:443', grpc.credentials.createSsl());
+    this.client = new RegistryService('api.buf.build:443', grpc.credentials.createSsl()) as grpc.Client 
+    & { CreateRepository: Function, GetRepository: Function, UpdateRepository: Function, DeleteRepository: Function };
   }
 
   public static getInstance(): GRPCClient {
@@ -30,7 +32,7 @@ class GRPCClient {
     return GRPCClient.instance;
   }
 
-  public getClient(): grpc.Client {
+  public getClient(): grpc.Client & { CreateRepository: Function, GetRepository: Function, UpdateRepository: Function, DeleteRepository: Function } {
     return this.client;
   }
 }
