@@ -1,0 +1,11 @@
+version: v1
+name: buf.build/hezi/grpc-api-automation
+lint:
+  use:
+    - DEFAULT
+breaking:
+  use:
+    - FILE
+build:
+  excludes:
+    - node_modules
