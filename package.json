@@ -9,7 +9,8 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.6.7",
     "@grpc/proto-loader": "^0.7.8",
-    "playwright": "^1.30.0"
+    "playwright": "^1.30.0",
+    "@connectrpc/connect-web": "^2.0.2"
   },
   "devDependencies": {
     "@bufbuild/protoc-gen-es": "^2.2.3",
