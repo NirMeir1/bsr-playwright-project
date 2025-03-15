@@ -4,21 +4,25 @@ import { RegistryService } from "@gen/registry_pb";
 
 class GRPCClient {
   private static instance: GRPCClient;
-  private client: any; // ✅ Temporarily using 'any' to force TypeScript to recognize functions
+  private client: ReturnType<typeof createClient<typeof RegistryService>>;
 
-  private constructor() {
+  private constructor(authToken: string, baseUrl: string) {
     const transport = createConnectTransport({
-      baseUrl: "https://api.buf.build",
+      baseUrl,
+      interceptors: [
+        (next) => async (req) => {
+          req.header.set("Authorization", `Bearer ${authToken}`);
+          return next(req);
+        },
+      ],
     });
 
     this.client = createClient(RegistryService, transport);
-
-    console.log("GRPC Client Methods:", Object.keys(this.client)); // ✅ Log methods
   }
 
-  public static getInstance(): GRPCClient {
+  public static getInstance(authToken: string, baseUrl: string): GRPCClient {
     if (!GRPCClient.instance) {
-      GRPCClient.instance = new GRPCClient();
+      GRPCClient.instance = new GRPCClient(authToken, baseUrl);
     }
     return GRPCClient.instance;
   }
