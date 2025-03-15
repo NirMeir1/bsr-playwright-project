@@ -1,45 +1,46 @@
 import { test, expect } from '@playwright/test';
 import GRPCClient from '../src/grpcClient';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 test.describe('Buf Schema Registry API Tests', () => {
-  const client = GRPCClient.getInstance().getClient();
+  let client: ReturnType<typeof GRPCClient.prototype.getClient>;
+
+  test.beforeAll(() => {
+    const authToken = process.env.BUF_API_TOKEN!;
+    const baseUrl = process.env.BASE_URL || 'https://api.buf.build';
+    client = GRPCClient.getInstance(authToken, baseUrl).getClient();
+  });
 
   test('Create Repository', async () => {
     const request = { name: 'new-repo', visibility: 'PUBLIC' };
-
-    client.CreateRepository(request, (error: any, response: any) => {
-      expect(error).toBeNull();
-      expect(response).toBeDefined();
-      expect(response.name).toBe('new-repo');
-    });
+    const response = await client.createRepository(request);
+    
+    expect(response).toBeDefined();
+    expect(response.name).toBe(request.name);
   });
 
   test('Get Repository', async () => {
-    const request = { owner: 'username', name: 'existing-repo' };
-
-    client.GetRepository(request, (error: any, response: any) => {
-      expect(error).toBeNull();
-      expect(response).toBeDefined();
-      expect(response.name).toBe('existing-repo');
-    });
+    const request = { owner: process.env.TEST_USER!, name: 'existing-repo' };
+    const response = await client.getRepository(request);
+    
+    expect(response).toBeDefined();
+    expect(response.name).toBe(request.name);
   });
 
   test('Update Repository', async () => {
-    const request = { owner: 'username', name: 'existing-repo', visibility: 'PRIVATE' };
-
-    client.UpdateRepository(request, (error: any, response: any) => {
-      expect(error).toBeNull();
-      expect(response).toBeDefined();
-      expect(response.visibility).toBe('PRIVATE');
-    });
+    const request = { owner: process.env.TEST_USER!, name: 'existing-repo', visibility: 'PRIVATE' };
+    const response = await client.updateRepository(request);
+    
+    expect(response).toBeDefined();
+    expect(response.visibility).toBe(request.visibility);
   });
 
   test('Delete Repository', async () => {
-    const request = { owner: 'username', name: 'repo-to-delete' };
-
-    client.DeleteRepository(request, (error: any, response: any) => {
-      expect(error).toBeNull();
-      expect(response).toBeDefined();
-    });
+    const request = { owner: process.env.TEST_USER!, name: 'repo-to-delete' };
+    const response = await client.deleteRepository(request);
+    
+    expect(response).toBeDefined();
   });
 });
