@@ -1,38 +1,33 @@
-import * as grpc from '@grpc/grpc-js';
-import * as protoLoader from '@grpc/proto-loader';
-import path from 'path';
-
-const PROTO_PATH = path.resolve(__dirname, '../protos/registry.proto');
-
-const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-
-const protoDescriptor = grpc.loadPackageDefinition(packageDefinition) as any;
-const RegistryService = protoDescriptor.buf.alpha.registry.v1alpha1.RegistryService;
+import { createClient } from "@connectrpc/connect";
+import { createConnectTransport } from "@connectrpc/connect-web";
+import { RegistryService } from "@gen/registry_pb";
 
 class GRPCClient {
   private static instance: GRPCClient;
-  private client: grpc.Client 
-  & { CreateRepository: Function, GetRepository: Function, UpdateRepository: Function, DeleteRepository: Function };
+  private client: ReturnType<typeof createClient<typeof RegistryService>>;
 
-  private constructor() {
-    this.client = new RegistryService('api.buf.build:443', grpc.credentials.createSsl()) as grpc.Client 
-    & { CreateRepository: Function, GetRepository: Function, UpdateRepository: Function, DeleteRepository: Function };
+  private constructor(authToken: string, baseUrl: string) {
+    const transport = createConnectTransport({
+      baseUrl,
+      interceptors: [
+        (next) => async (req) => {
+          req.header.set("Authorization", `Bearer ${authToken}`);
+          return next(req);
+        },
+      ],
+    });
+
+    this.client = createClient(RegistryService, transport);
   }
 
-  public static getInstance(): GRPCClient {
+  public static getInstance(authToken: string, baseUrl: string): GRPCClient {
     if (!GRPCClient.instance) {
-      GRPCClient.instance = new GRPCClient();
+      GRPCClient.instance = new GRPCClient(authToken, baseUrl);
     }
     return GRPCClient.instance;
   }
 
-  public getClient(): grpc.Client & { CreateRepository: Function, GetRepository: Function, UpdateRepository: Function, DeleteRepository: Function } {
+  public getClient() {
     return this.client;
   }
 }

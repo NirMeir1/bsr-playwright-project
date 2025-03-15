@@ -1,11 +1,11 @@
 import { defineConfig } from '@playwright/test';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export default defineConfig({
   testDir: './tests',
   use: {
-    baseURL: 'https://api.buf.build', // BSR API endpoint
-    extraHTTPHeaders: {
-      'Authorization': `Bearer ${process.env.BUF_API_TOKEN}`, // Set your API token
-    },
+    baseURL: process.env.BASE_URL || 'https://api.buf.build',
   },
 });

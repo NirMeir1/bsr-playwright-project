@@ -1,0 +1,17 @@
+Scanning with ignorePatterns **/dist/** in C:\Users\meirn\Projects\bsr-playwright-project
+sourceFiles: ["playwright.config.ts","src/grpcClient.ts","tests/bsr_tests.spec.ts","src/gen/registry_pb.ts"]
+packageFiles: [{"path":"package.json","pkg":{"name":"bsr-playwright-project","version":"1.0.0","description":"Playwright with TypeScript to test Buf Schema Registry API","main":"index.js","scripts":{"test":"npx playwright test"},"dependencies":{"@grpc/grpc-js":"^1.6.7","@grpc/proto-loader":"^0.7.8","playwright":"^1.30.0","@bufbuild/protobuf":"1.2.1","@bufbuild/connect-web":"latest"},"devDependencies":{"@bufbuild/protoc-gen-es":"^2.2.3","@playwright/test":"^1.30.0","@types/node":"^18.7.23","ts-node":"^10.9.1","typescript":"^4.9.3"}}}]
+lockFiles: ["package-lock.json"]
+bufGenYamlPaths: ["buf.gen.yaml"]
+caught error: TypeError: Invalid comparator: latest
+TypeError: Invalid comparator: latest
+    at Comparator.parse (C:\Users\meirn\AppData\Local\npm-cache\_npx\776df9ec46ca1fab\node_modules\semver\classes\comparator.js:39:13)
+    at new Comparator (C:\Users\meirn\AppData\Local\npm-cache\_npx\776df9ec46ca1fab\node_modules\semver\classes\comparator.js:23:10)
+    at C:\Users\meirn\AppData\Local\npm-cache\_npx\776df9ec46ca1fab\node_modules\semver\classes\range.js:152:47
+    at Array.map (<anonymous>)
+    at Range.parseRange (C:\Users\meirn\AppData\Local\npm-cache\_npx\776df9ec46ca1fab\node_modules\semver\classes\range.js:152:35)
+    at C:\Users\meirn\AppData\Local\npm-cache\_npx\776df9ec46ca1fab\node_modules\semver\classes\range.js:40:22
+    at Array.map (<anonymous>)
+    at new Range (C:\Users\meirn\AppData\Local\npm-cache\_npx\776df9ec46ca1fab\node_modules\semver\classes\range.js:40:8)
+    at intersects (C:\Users\meirn\AppData\Local\npm-cache\_npx\776df9ec46ca1fab\node_modules\semver\ranges\intersects.js:4:8)
+    at migrateDependencies (C:\Users\meirn\AppData\Local\npm-cache\_npx\776df9ec46ca1fab\node_modules\@connectrpc\connect-migrate\dist\cjs\lib\migrate-dependencies.js:59:50)
